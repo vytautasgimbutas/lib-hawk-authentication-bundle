@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="hawk.security.authentication.listener.class">Tornado\Bundle\HawkAuthenticationBundle\Security\Http\Firewall\HawkListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="hawk.security.default_time_provider" class="Dflydev\Hawk\Time\TimeProvider"/>
+        <service id="hawk.security.default_crypto" class="Dflydev\Hawk\Crypto\Crypto"/>
+        <service id="hawk.security.default_header_parser" class="Dflydev\Hawk\Header\HeaderParser"/>
+
+        <service id="hawk.security.authentication.listener"
+                 class="%hawk.security.authentication.listener.class%"
+                 public="false">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.authentication.manager"/>
+            <argument type="service" id="hawk.security.header_parser"/>
+        </service>
+    </services>
+</container>

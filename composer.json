@@ -1,0 +1,19 @@
+{
+    "name": "vytautasgimbutas/lib-hawk-authentication-bundle",
+    "description": "Hawk Authentication Bundle for Symfony2",
+    "authors": [
+        {
+            "name": "Vytautas Gimbutas",
+            "email": "vytautas@gimbutas.net"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Tornado\\Bundle\\HawkAuthenticationBundle\\": "src/"
+        }
+    },
+    "require": {
+        "symfony/symfony": "~2.0",
+        "dflydev/hawk": "0.0.0"
+    }
+}
