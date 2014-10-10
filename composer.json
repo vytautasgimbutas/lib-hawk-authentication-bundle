@@ -7,6 +7,7 @@
             "email": "vytautas@gimbutas.net"
         }
     ],
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Tornado\\Bundle\\HawkAuthenticationBundle\\": "src/"
