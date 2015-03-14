@@ -69,14 +69,8 @@ class HawkListener implements ListenerInterface
             ->setAuthorizationHeader($authorizationHeader)
         ;
 
-        try {
-            $authenticatedToken = $this->authenticationManager->authenticate($unauthenticatedToken);
+        $authenticatedToken = $this->authenticationManager->authenticate($unauthenticatedToken);
 
-            $this->securityContext->setToken($authenticatedToken);
-        } catch (AuthenticationException $exception) {
-            $response = new Response();
-            $response->setStatusCode(Response::HTTP_FORBIDDEN);
-            $event->setResponse($response);
-        }
+        $this->securityContext->setToken($authenticatedToken);
     }
 }

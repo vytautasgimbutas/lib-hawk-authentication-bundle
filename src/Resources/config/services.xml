@@ -20,5 +20,9 @@
             <argument type="service" id="security.authentication.manager"/>
             <argument type="service" id="hawk.security.header_parser"/>
         </service>
+
+        <service id="hawk.security.authentication.entry_point"
+                 class="Tornado\Bundle\HawkAuthenticationBundle\Security\Http\EntryPoint\HawkEntryPoint"
+                 public="false"/>
     </services>
 </container>

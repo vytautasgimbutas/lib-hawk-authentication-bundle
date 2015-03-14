@@ -7,6 +7,7 @@ use Dflydev\Hawk\Server\UnauthorizedException;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Tornado\Bundle\HawkAuthenticationBundle\Security\Core\Authentication\Token\HawkToken;
 
@@ -20,11 +21,13 @@ class HawkAuthenticationProvider implements AuthenticationProviderInterface
 {
     protected $hawkServer;
     protected $userProvider;
+    protected $userChecker;
 
-    public function __construct(ServerInterface $hawkServer, UserProviderInterface $userProvider)
+    public function __construct(ServerInterface $hawkServer, UserProviderInterface $userProvider, UserCheckerInterface $userChecker)
     {
         $this->hawkServer = $hawkServer;
         $this->userProvider = $userProvider;
+        $this->userChecker = $userChecker;
     }
 
     /**
@@ -43,6 +46,10 @@ class HawkAuthenticationProvider implements AuthenticationProviderInterface
         }
 
         try {
+            $user = $this->userProvider->loadUserByUsername($token->getId());
+
+            $this->userChecker->checkPreAuth($user);
+
             $this->hawkServer->authenticate(
                 $token->getMethod(),
                 $token->getHost(),
@@ -53,7 +60,7 @@ class HawkAuthenticationProvider implements AuthenticationProviderInterface
                 $token->getAuthorizationHeader()
             );
 
-            $user = $this->userProvider->loadUserByUsername($token->getId());
+            $this->userChecker->checkPostAuth($user);
 
             $authenticatedToken = new HawkToken($user->getRoles());
             $authenticatedToken->copy($token);

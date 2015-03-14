@@ -24,6 +24,10 @@ class HawkSecurityFactory implements SecurityFactoryInterface
             new Reference($userProvider),
         ));
 
+        if ($config['create_entry_point']) {
+            $defaultEntryPoint = $this->createEntryPoint($container, $defaultEntryPoint);
+        }
+
         $container->setDefinition('hawk.security.default_credentials_provider', $providerDefinition);
 
         $container->setDefinition('hawk.security.header_parser', new DefinitionDecorator($config['header_parser']));
@@ -39,7 +43,8 @@ class HawkSecurityFactory implements SecurityFactoryInterface
 
         $hawkAuthenticationProvider = new Definition($config['hawk_authentication_provider_class'], array(
             $hawkServer,
-            new Reference($userProvider)
+            new Reference($userProvider),
+            new Reference($config['user_checker'])
         ));
 
         $providerId = 'security.authentication.provider.hawk.' . $id;
@@ -83,10 +88,20 @@ class HawkSecurityFactory implements SecurityFactoryInterface
                 ->integerNode('local_time_offset_seconds')->defaultValue(0)->end()
 
                 ->scalarNode('hawk_server_class')->defaultValue('Dflydev\Hawk\Server\Server')->end()
-                ->scalarNode('hawk_authentication_provider_class')
-                    ->defaultValue($hawkAuthenticationProviderClass)
-                ->end()
+                ->scalarNode('hawk_authentication_provider_class')->defaultValue($hawkAuthenticationProviderClass)->end()
+
+                ->booleanNode('create_entry_point')->defaultTrue()->end()
+
+                ->scalarNode('user_checker')->defaultValue('security.user_checker')->end()
             ->end()
         ;
+    }
+
+    protected function createEntryPoint(ContainerBuilder $container, $id)
+    {
+        $entryPointId = 'hawk.security.authentication.entry_point.'.$id;
+        $container->setDefinition($entryPointId, new DefinitionDecorator('hawk.security.authentication.entry_point'));
+
+        return $entryPointId;
     }
 }
