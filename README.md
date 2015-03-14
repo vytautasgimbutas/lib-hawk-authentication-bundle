@@ -12,4 +12,4 @@ Usage
 ------------
 Soon.
 
-[1]: https://github.com/vytautasgimbutas/lib-hawk-guzzle-subscriber
+[1]: https://github.com/vytautasgimbutas/lib-hawk-authentication-guzzle-subscriber
