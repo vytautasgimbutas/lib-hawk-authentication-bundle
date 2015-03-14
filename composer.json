@@ -8,6 +8,7 @@
         }
     ],
     "license": "MIT",
+    "keywords": ["hawk", "authentication", "bundle", "security"],
     "autoload": {
         "psr-4": {
             "Tornado\\Bundle\\HawkAuthenticationBundle\\": "src/"
